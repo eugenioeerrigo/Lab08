@@ -9,12 +9,12 @@ import java.util.List;
 
 public class WordDAO {
 
-	/*
+	/**
 	 * Ritorna tutte le parole di una data lunghezza
 	 */
 	public List<String> getAllWordsFixedLength(int length) {
 
-		String sql = "SELECT nome FROM parola WHERE LENGTH(nome) = ?;";
+		String sql = "SELECT nome FROM parola WHERE LENGTH(nome) = ?;";               //..LIMIT 100 " se voglio solo i primi 100
 		List<String> parole = new ArrayList<String>();
 
 		try {
@@ -35,4 +35,5 @@ public class WordDAO {
 		}
 	}
 
+	
 }

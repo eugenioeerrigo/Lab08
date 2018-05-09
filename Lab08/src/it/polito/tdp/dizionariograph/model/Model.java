@@ -7,10 +7,8 @@ import java.util.Set;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 
-import it.polito.tdp.dizionariograph.bean.Word;
 import it.polito.tdp.dizionariograph.db.WordDAO;
 
 public class Model {
@@ -22,23 +20,32 @@ public class Model {
 	
 	public void createGraph(int numeroLettere) {
 
+		//Leggo lista di oggetti dal DB (da aggiungere ai vertici)
 		WordDAO dao = new WordDAO();
 		parole = dao.getAllWordsFixedLength(numeroLettere);
 		
+		//Creo grafo
 		graph = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
+		
+		//Aggiungo i vertici
 		Graphs.addAllVertices(graph, parole);
 		
+		//Aggiungo gli archi tramite metodo
 		this.addEdges(graph);
+		
 		System.out.format("Grafo creato: %d vertici, %d archi\n", graph.vertexSet().size(), graph.edgeSet().size());
 		
 	}
 
+	/**
+	 * Aggiunge gli archi tramite doppio ciclo (coppie possibili) 
+	 */
 	private void addEdges(Graph<String, DefaultEdge> graph) {
 			for (String s1 : this.parole) {
 				for (String s2 : this.parole) {
-					if (!s1.equals(s2)) {                                    // escludo coppie 
-						if(letteraDiversa(s1, s2))
-								graph.addEdge(s1, s2);
+					if (!s1.equals(s2)) {                // escludo coppie uguali
+						if(letteraDiversa(s1, s2))                       //Scelgo le coppie che hanno 1 sola lettera diversa
+								graph.addEdge(s1, s2);                  //addEdge aggiunge null per la seconda coppia (a,b) e (b,a)
 					}
 				}
 			}
@@ -77,6 +84,10 @@ public class Model {
 
 	public int findMaxDegree() {
 		int max = 0;
+		
+		if(graph == null)
+			return -1;
+		
 		vertMax = "";
 		
 		Set<String> vertici = graph.vertexSet();

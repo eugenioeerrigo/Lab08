@@ -5,6 +5,7 @@
 package it.polito.tdp.dizionariograph;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -39,15 +40,18 @@ public class DizionarioGraphController {
 
     @FXML
     void handleGraph(ActionEvent event) {
+    	TextLog.clear();
     	int length;
     	try {
 			length = Integer.parseInt(TextLength.getText());
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			TextLog.appendText("Inserisci un valore numerico!");
 			return;
 		}
     	
     	model.createGraph(length);
+    	TextLog.appendText("Grafo creato!");
+    	
     }
 
     @FXML
@@ -55,7 +59,7 @@ public class DizionarioGraphController {
     	TextLog.clear();
     	List<String> neighbours = model.displayNeighbours(TextWord.getText());
     	if(neighbours.isEmpty())
-    		TextLog.appendText("Premere tasto GENERA GRAFO prima");
+    		TextLog.appendText("Premere tasto GENERA GRAFO prima!\nVerificare che la parola inserita sia del numero di lettere indicato.");
     	else {
 	    	for(String a: neighbours)
 	    		TextLog.appendText(a+"\n");
@@ -72,7 +76,11 @@ public class DizionarioGraphController {
     
     @FXML
     void handleDegreeMax(ActionEvent event) {
-    	TextLog.appendText("Il vertice di grado massimo e': "+model.getVertMax()+" con valore "+model.findMaxDegree());
+    	TextLog.clear();
+    	if(model.findMaxDegree()==-1)
+    		TextLog.appendText("Premere tasto GENERA GRAFO prima");
+    	else
+    		TextLog.appendText("Il vertice di grado massimo e': "+model.getVertMax()+" con valore "+model.findMaxDegree());
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
